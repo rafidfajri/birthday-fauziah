@@ -1,179 +1,196 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Happy Birthday Six Ay! 💕</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <title>Happy Birthday ay! 💕</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <style>
+        /* RESET & BASE */
+        * { box-sizing: border-box; }
         body { 
-            margin: 0; padding: 20px; 
-            height: 100vh; background: linear-gradient(135deg, #ff9a9e, #fecfef, #fecfef, #ff9a9e);
+            margin: 0; padding: 15px; min-height: 100vh; 
+            background: linear-gradient(135deg, #ff9a9e, #fecfef, #ff9a9e);
             background-size: 400% 400%; animation: gradientShift 8s ease infinite;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            font-family: 'Georgia', serif; overflow: hidden;
+            font-family: 'Georgia', serif; overflow-x: hidden; position: relative;
+            touch-action: pan-y pinch-zoom;
         }
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+        @keyframes gradientShift { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%}}
         
-        /* Photo Slider */
-        .slider-container {
-            width: 90%; max-width: 400px; height: 400px; margin-bottom: 40px;
-            position: relative; border-radius: 25px; overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3); cursor: grab;
+        /* LOVE LOGO */
+        .love-logo {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-size: clamp(4rem, 12vw, 8rem); color: #ff1493; 
+            text-shadow: 0 0 40px #ff69b4, 0 0 60px #ff1493;
+            opacity: 0; z-index: 100; pointer-events: none;
+            animation: heartbeat 1.8s ease-in-out infinite;
+            font-weight: 700; letter-spacing: 0.1em; transition: opacity 1s;
         }
-        .slider-container:active { cursor: grabbing; }
+        @keyframes heartbeat {
+            0%,100%{transform:translate(-50%,-50%) scale(1)}
+            20%{transform:translate(-50%,-50%) scale(1.25)}
+            40%{transform:translate(-50%,-50%) scale(1.1)}
+        }
+        .love-logo.show { opacity: 1; }
+        
+        /* SLIDER */
+        .slider-container {
+            width: clamp(280px, 85vw, 380px); 
+            height: clamp(280px, 85vw * 1.1, 420px); 
+            margin: 0 auto 20px; position: relative; border-radius: 25px; 
+            overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.25); 
+            cursor: grab; transition: all 1s ease;
+        }
+        .slider-container.fade-out { opacity: 0; transform: scale(0.92); pointer-events: none; }
         
         .photo {
             width: 100%; height: 100%; object-fit: cover;
-            position: absolute; opacity: 0; transition: opacity 0.5s ease;
+            position: absolute; top: 0; left: 0; opacity: 0; 
+            transition: opacity 0.7s ease, transform 0.7s ease;
             border-radius: 25px;
         }
-        .photo.active { opacity: 1; }
+        .photo.active { 
+            opacity: 1; transform: scale(1.03); 
+            border: 5px solid rgba(255,20,147,0.7);
+        }
         
         .photo-counter {
             position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
-            background: rgba(255,255,255,0.9); padding: 10px 20px; border-radius: 25px;
-            font-weight: bold; color: #ff6b9d; font-size: 1.2rem;
+            background: rgba(255,255,255,0.9); padding: 8px 15px; 
+            border-radius: 30px; font-weight: bold; color: #ff1493; 
+            z-index: 20; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
+
+        /* Fly animation */
+        .photo.fly {
+            position: fixed !important; top: 50% !important; left: 50% !important;
+            width: 80px !important; height: 80px !important; border-radius: 50% !important;
+            z-index: 50 !important; animation: flyToLove 2.2s ease-in forwards !important;
+        }
+        @keyframes flyToLove {
+            0% { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(0) rotate(1080deg); opacity: 0; }
+        }
+
+        /* Opening Screen */
+        .opening-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #ff9a9e, #fecfef); z-index: 1000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 1s; text-align: center; cursor: pointer;
+        }
+        .opening-screen.fade-out { opacity: 0; pointer-events: none; }
         
-        /* Love Note (Hidden Initially) */
         .love-note {
-            opacity: 0; transform: scale(0.8); transition: all 1s ease;
-            background: rgba(255,255,255,0.95); padding: 40px; border-radius: 20px;
-            text-align: center; max-width: 90%; box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            backdrop-filter: blur(10px);
+            opacity: 0; transform: translateY(30px); transition: all 1.5s ease;
+            background: rgba(255,255,255,0.95); padding: 30px; border-radius: 30px;
+            text-align: center; max-width: 90%; box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            position: absolute; display: none;
         }
-        .love-note.show {
-            opacity: 1; transform: scale(1);
-        }
-        .love-note h1 { color: #ff6b9d; font-size: 2.5rem; margin: 0 0 20px; }
-        .love-note p { font-size: 1.3rem; line-height: 1.6; color: #333; }
-        
-        /* Swipe Instructions */
-        .swipe-hint {
-            color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
-            font-size: 1.1rem; margin-bottom: 20px; animation: pulse 2s infinite;
-        }
-        @keyframes pulse { 0%, 100% { opacity: 0.7; } 50% { opacity: 1; } }
-        
-        /* Floating Hearts */
-        .hearts { position: fixed; font-size: 1.5rem; pointer-events: none; }
-        .heart1 { top: 10%; left: 10%; animation: float 6s infinite; }
-        .heart2 { bottom: 20%; right: 10%; animation: float 6s 2s infinite; }
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.7; }
-            50% { transform: translateY(-20px) rotate(180deg); opacity: 1; }
-        }
-        
-        @media (max-width: 600px) {
-            .slider-container { height: 300px; }
-            .love-note h1 { font-size: 2rem; }
-        }
+        .love-note.show { opacity: 1; transform: translateY(0); display: block; }
+
+        .rose { position: fixed; top: -10%; pointer-events: none; animation: fall 6s linear infinite; }
+        @keyframes fall { 100% { transform: translateY(110vh) rotate(360deg); } }
     </style>
 </head>
 <body>
-    <!-- Floating Hearts -->
-    <div class="hearts heart1">💖</div>
-    <div class="hearts heart2">💕</div>
-    
-    <!-- Photo Slider -->
-    <div class="slider-container" id="slider">
-        <div class="photo-counter" id="counter">1 / 3</div>
-        
-        <!-- ADD YOUR 3-5 PHOTOS HERE -->
-        <img src="PHOTO1_URL_HERE.jpg" class="photo active" data-num="1">
-        <img src="PHOTO2_URL_HERE.jpg" class="photo" data-num="2">
-        <img src="PHOTO3_URL_HERE.jpg" class="photo" data-num="3">
-        <!-- Add more photos here -->
+
+    <audio id="bgMusic" loop>
+        <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav" type="audio/wav">
+    </audio>
+
+    <div class="opening-screen" id="opening">
+        <h1 style="color:white; font-size: 3rem;">💕 Happy Birthday ay! 💕</h1>
+        <p style="color:white;">Touch to open your gift...</p>
     </div>
-    
-    <div class="swipe-hint">👆 Swipe left/right through our memories! 💕</div>
-    
-    <!-- YOUR PERSONAL LOVE NOTE (Edit this!) -->
-    <div class="love-note" id="note">
-        <h1>Happy 26th Birthday, Six Ay! 🎉</h1>
-        <p>
-            My beautiful girl, every photo reminds me how lucky I am. 
-            You've made these 26 years (and our time together) the best adventure ever. 
-            Here's to 26 more years of your smile lighting up my world. 
-            I love you more than words (or swipes) can say! 💕<br><br>
-            
-            Forever yours,<br>
-            <strong>[Your Name]</strong> ❤️
+
+    <div class="main-content" id="mainContent" style="display:none; width: 100%; text-align: center;">
+        <div class="slider-container" id="slider">
+            <div class="photo-counter" id="counter">💕 1 / 3 💕</div>
+            <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b0?w=500" class="photo active">
+            <img src="https://images.unsplash.com/photo-1517755895-4bf0c1d2c1f2?w=500" class="photo">
+            <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500" class="photo">
         </div>
+        <p style="color:white; font-weight:bold;">Swipe through our memories... ✨</p>
+    </div>
+
+    <div class="love-logo" id="loveLogo">LOVE</div>
+
+    <div class="love-note" id="note">
+        <h2 style="color:#ff1493">Happy 26th Birthday, ay! 🎉</h2>
+        <p>Every photo holds a piece of my heart. Here's to us, forever.<br><br>
+        <strong>Love, Rafid ❤️</strong></p>
+    </div>
 
     <script>
-        const slider = document.getElementById('slider');
+        const opening = document.getElementById('opening');
+        const mainContent = document.getElementById('mainContent');
+        const music = document.getElementById('bgMusic');
         const photos = document.querySelectorAll('.photo');
+        const slider = document.getElementById('slider');
         const counter = document.getElementById('counter');
+        const loveLogo = document.getElementById('loveLogo');
         const note = document.getElementById('note');
-        let currentPhoto = 0;
-        let startX = 0;
-        
-        // Show note after viewing all photos
-        function checkAllPhotosViewed() {
-            if (currentPhoto >= photos.length - 1) {
-                setTimeout(() => {
-                    slider.style.opacity = '0';
-                    note.classList.add('show');
-                }, 1000);
-            }
-        }
-        
-        // Touch/Swipe Events
-        slider.addEventListener('touchstart', (e) => {
-            startX = e.touches[0].clientX;
+
+        let current = 0;
+
+        // START EVERYTHING
+        opening.addEventListener('click', () => {
+            opening.classList.add('fade-out');
+            mainContent.style.display = 'block';
+            music.play().catch(() => console.log("Music needs user interaction"));
+            startPetals();
         });
-        
-        slider.addEventListener('touchend', (e) => {
-            let endX = e.changedTouches[0].clientX;
-            let diff = startX - endX;
+
+        function updateSlider() {
+            photos.forEach(p => p.classList.remove('active'));
+            photos[current].classList.add('active');
+            counter.textContent = `💕 ${current + 1} / ${photos.length} 💕`;
             
-            if (Math.abs(diff) > 50) { // Swipe threshold
-                if (diff > 0) nextPhoto();  // Swipe left
-                else prevPhoto();           // Swipe right
+            // If it's the last photo, trigger the surprise after 3 seconds
+            if (current === photos.length - 1) {
+                setTimeout(finale, 3000);
             }
-        });
-        
-        // Mouse Drag (Desktop)
-        let isDragging = false;
-        slider.addEventListener('mousedown', (e) => {
-            isDragging = true; startX = e.clientX;
-        });
-        document.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-        });
-        document.addEventListener('mouseup', (e) => {
-            if (!isDragging) return;
-            let endX = e.clientX;
-            let diff = startX - endX;
+        }
+
+        // SWIPE LOGIC
+        let startX = 0;
+        slider.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        slider.addEventListener('touchend', e => {
+            let diff = startX - e.changedTouches[0].clientX;
             if (Math.abs(diff) > 50) {
-                if (diff > 0) nextPhoto();
-                else prevPhoto();
+                if (diff > 0) current = (current + 1) % photos.length;
+                else current = (current - 1 + photos.length) % photos.length;
+                updateSlider();
             }
-            isDragging = false;
         });
-        
-        // Next/Previous Functions
-        function nextPhoto() {
-            photos[currentPhoto].classList.remove('active');
-            currentPhoto = (currentPhoto + 1) % photos.length;
-            photos[currentPhoto].classList.add('active');
-            counter.textContent = `${currentPhoto + 1} / ${photos.length}`;
-            checkAllPhotosViewed();
+
+        function finale() {
+            photos.forEach((p, i) => {
+                setTimeout(() => p.classList.add('fly'), i * 200);
+            });
+            setTimeout(() => {
+                slider.classList.add('fade-out');
+                loveLogo.classList.add('show');
+            }, 1000);
+            setTimeout(() => {
+                loveLogo.classList.remove('show');
+                note.classList.add('show');
+            }, 4000);
         }
-        
-        function prevPhoto() {
-            photos[currentPhoto].classList.remove('active');
-            currentPhoto = (currentPhoto + currentPhoto > 0 ? currentPhoto - 1 : photos.length - 1);
-            photos[currentPhoto].classList.add('active');
-            counter.textContent = `${currentPhoto + 1} / ${photos.length}`;
+
+        function startPetals() {
+            const symbols = ['🌹', '💖', '🌸', '✨'];
+            setInterval(() => {
+                const petal = document.createElement('div');
+                petal.classList.add('rose');
+                petal.innerHTML = symbols[Math.floor(Math.random() * symbols.length)];
+                petal.style.left = Math.random() * 100 + 'vw';
+                petal.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                document.body.appendChild(petal);
+                setTimeout(() => petal.remove(), 6000);
+            }, 300);
         }
-        
-        // Auto-advance every 4 seconds (optional)
-        setInterval(nextPhoto, 4000);
     </script>
 </body>
 </html>
